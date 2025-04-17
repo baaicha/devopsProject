@@ -3,7 +3,7 @@
 *.bak
 
 # Ignore Kubernetes secrets/configs
-*.yaml
+#*.yaml
 
 # Ignore minikube config files
 .kube/
