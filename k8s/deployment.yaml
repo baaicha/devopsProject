@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: book-app-container
-          image: aicha814/book-app:latest  # Remplacer par l'image que tu veux utiliser
+          image: aicha814/book-app:latest  
           ports:
             - containerPort: 80

@@ -1,0 +1,42 @@
+name: CI/CD Book App
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-deploy-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name:  Cloner le dépôt
+      uses: actions/checkout@v3
+
+    - name:  Installer kubectl et Minikube
+      uses: medyagh/setup-minikube@latest
+
+    - name:  Démarrer Minikube
+      run: minikube start
+
+    - name: Appliquer le déploiement Kubernetes
+      run: |
+        kubectl apply -f k8s/deployment.yaml
+        kubectl apply -f k8s/service.yaml
+
+    - name:  Attendre que les pods soient prêts
+      run: kubectl wait --for=condition=available --timeout=60s deployment/book-app-deployment
+
+    - name:  Obtenir l'URL du service
+      id: service-url
+      run: echo "::set-output name=url::$(minikube servicebook-app-service --url)"
+    
+    - name:  Tester les pages PHP
+      run: |
+        echo "Test de index.php"
+        curl -s -o /dev/null -w "%{http_code}" ${{ steps.service-url.outputs.url }}/index.php | grep 200
+
+        echo "Test de ajouter.php"
+        curl -s -o /dev/null -w "%{http_code}" ${{ steps.service-url.outputs.url }}/ajouter.php | grep 200
+
+        echo "Test de modifier.php"
+        curl -s -o /dev/null -w "%{http_code}" ${{ steps.service-url.outputs.url }}/modifier.php?id=1 | grep 200

@@ -5,6 +5,6 @@ metadata:
 spec:
   containers:
     - name: book-app-container
-      image: aicha814/book-app:latest  # Remplacer par l'image que tu veux utiliser (locale ou depuis Docker Hub)
+      image: aicha814/book-app:latest  
       ports:
         - containerPort: 80
