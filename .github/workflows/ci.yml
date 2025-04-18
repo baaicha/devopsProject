@@ -28,15 +28,19 @@ jobs:
 
     - name:  Obtenir l'URL du service
       id: service-url
-      run: echo "::set-output name=url::$(minikube servicebook-app-service --url)"
+      run: echo "::set-output name=url::$(minikube service book-app-service --url)"
     
-    - name:  Tester les pages PHP
-      run: |
-        echo "Test de index.php"
-        curl -s -o /dev/null -w "%{http_code}" ${{ steps.service-url.outputs.url }}/index.php | grep 200
+    - - name: 🧪 Tester les pages PHP
 
-        echo "Test de ajouter.php"
-        curl -s -o /dev/null -w "%{http_code}" ${{ steps.service-url.outputs.url }}/ajouter.php | grep 200
+  run: |
+    echo "Test de index.php"
+    curl -s -o /dev/null -w "%{http_code}" "${{ steps.service-url.outputs.URL }}/index.php" | grep 200
 
-        echo "Test de modifier.php"
-        curl -s -o /dev/null -w "%{http_code}" ${{ steps.service-url.outputs.url }}/modifier.php?id=1 | grep 200
+    echo "Test de ajouter.php"
+    curl -s -o /dev/null -w "%{http_code}" "${{ steps.service-url.outputs.URL }}/ajouter.php" | grep 200
+
+    echo "Test de modifier.php"
+    curl -s -o /dev/null -w "%{http_code}" "${{ steps.service-url.outputs.URL }}/modifier.php?id=1" | grep 200
+
+    echo "Test de supprimer.php"
+    curl -s -o /dev/null -w "%{http_code}" "${{ steps.service-url.outputs.URL }}/supprimer.php?id=1" | grep 200
