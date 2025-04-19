@@ -1,10 +1,18 @@
 [
     {
-        "titre": "jh",
-        "auteur": "dd"
+        "titre": "Les trois Mousquetaires",
+        "auteur": "Alexandre Dumas"
     },
     {
-        "titre": "jh",
-        "auteur": "1234"
+        "titre": "Candide",
+        "auteur": "Voltaire"
+    },
+    {
+        "titre": "Jane Eyre",
+        "auteur": "Charlotte Orwell"
+    },
+    {
+        "titre": "Cent ans de solitude",
+        "auteur": "Gabriel Gracia Marquez"
     }
 ]
