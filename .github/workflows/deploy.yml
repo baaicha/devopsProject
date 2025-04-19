@@ -1,11 +1,11 @@
-name: CI/CD - Book App Deployment
+name: CI/CD - Book App Build and Push
 
 on:
   push:
     branches: [main]
 
 jobs:
-  deploy:
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,49 +20,3 @@ jobs:
 
       - name: Push image to Docker Hub
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/book-app:latest
-
-      - name: Setup kubeconfig with secrets
-        run: |
-          mkdir -p ~/.kube
-
-          echo "$CA_CRT" | base64 -d > ~/.kube/ca.crt
-          echo "$CLIENT_CRT" | base64 -d > ~/.kube/client.crt
-          echo "$CLIENT_KEY" | base64 -d > ~/.kube/client.key
-
-          cat <<EOF > ~/.kube/config
-apiVersion: v1
-kind: Config
-clusters:
-- name: minikube
-  cluster:
-    server: https://127.0.0.1:54582
-    certificate-authority: ~/.kube/ca.crt
-contexts:
-- name: minikube
-  context:
-    cluster: minikube
-    user: minikube
-current-context: minikube
-users:
-- name: minikube
-  user:
-    client-certificate: ~/.kube/client.crt
-    client-key: ~/.kube/client.key
-EOF
-
-        env:
-          CA_CRT: ${{ secrets.CA_CRT }}
-          CLIENT_CRT: ${{ secrets.CLIENT_CRT }}
-          CLIENT_KEY: ${{ secrets.CLIENT_KEY }}
-
-      - name: Apply Kubernetes files
-        run: |
-          kubectl apply -f k8s/deployment.yaml
-          kubectl apply -f k8s/service.yaml
-        env:
-          KUBECONFIG: ~/.kube/config
-
-      - name: Run test script
-        run: |
-          chmod +x tests/test.sh
-          bash tests/test.sh
