@@ -1,41 +1,22 @@
-name: CI/CD - Book App Deployment
+name: CI/CD - Book App Build and Push
 
 on:
   push:
     branches: [main]
 
 jobs:
-  build-and-deploy:
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
-      - name:  Checkout code
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name:  Set up Docker credentials
+      - name: Set up Docker credentials
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
-      - name:  Build Docker image
+      - name: Build Docker image
         run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/book-app:latest .
 
-      - name:  Push image to Docker Hub
+      - name: Push image to Docker Hub
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/book-app:latest
-
-      - name:  Setup Kubeconfig
-        run: |
-          echo "${{ secrets.KUBECONFIG_DATA }}" | base64 --decode > kubeconfig
-        env:
-          KUBECONFIG_DATA: ${{ secrets.KUBECONFIG_DATA }}
-
-      - name:  Deploy to Kubernetes
-        run: |
-          export KUBECONFIG=$PWD/kubeconfig
-          kubectl apply -f k8s/deployment.yaml
-          kubectl apply -f k8s/service.yaml
-
-      - name: Run test script
-        run: |
-          chmod +x tests/test.sh
-          bash tests/test.sh
-          name: Set kubeconfig
- 
