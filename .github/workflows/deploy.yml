@@ -37,3 +37,8 @@ jobs:
         run: |
           chmod +x tests/test.sh
           bash tests/test.sh
+          name: Set kubeconfig
+  run: |
+    export KUBECONFIG=$PWD/k8s/kubeconfig.yaml
+    kubectl apply -f k8s/deployment.yaml
+    kubectl apply -f k8s/service.yaml
