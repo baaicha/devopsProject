@@ -16,10 +16,13 @@ jobs:
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
       - name:  Build Docker image
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/book-app:latest .
+        run: docker build -t aicha814/book-app:latest .
+
+      - name: Liste des images Docker
+        run: docker images
 
       - name:  Push image to Docker Hub
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/book-app:latest
+        run: docker push aicha814/book-app:latest
 
       - name:  Setup Kubeconfig
         run: |
@@ -27,13 +30,13 @@ jobs:
         env:
           KUBECONFIG_DATA: ${{ secrets.KUBECONFIG_DATA }}
 
-      - name:  Deploy to Kubernetes
+      - name: 📦 Deploy to Kubernetes
         run: |
           export KUBECONFIG=$PWD/kubeconfig
           kubectl apply -f k8s/deployment.yaml
           kubectl apply -f k8s/service.yaml
 
-      - name:  Run test script
+      - name: 🧪 Run test script
         run: |
           chmod +x tests/test.sh
           bash tests/test.sh
