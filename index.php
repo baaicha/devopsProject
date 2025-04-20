@@ -24,10 +24,11 @@ $livres = file_exists('livres.json') ? json_decode(file_get_contents('livres.jso
   <ul class="list-group">
     <?php foreach ($livres as $index => $livre): ?>
       <li class="list-group-item d-flex justify-content-between align-items-center">
-        <?= htmlspecialchars($livre['titre']) ?> - <?= htmlspecialchars($livre['auteur']) ?>
-        <a href="modifier.php?index=<?= $index ?>" class="btn btn-sm btn-warning">Modifier</a>
-        <!-- Remplacer le lien par un bouton appelant confirmDelete -->
-        <button onclick="confirmDelete('supprimer.php?index=<?= $index ?>')" class="btn btn-sm btn-danger">Supprimer</button>
+        <span><?= htmlspecialchars($livre['titre']) ?> - <?= htmlspecialchars($livre['auteur']) ?></span>
+        <div class="d-flex gap-2">
+          <a href="modifier.php?index=<?= $index ?>" class="btn btn-sm btn-warning">Modifier</a>
+          <button onclick="confirmDelete('supprimer.php?index=<?= $index ?>')" class="btn btn-sm btn-danger">Supprimer</button>
+        </div>
       </li>
     <?php endforeach; ?>
   </ul>
