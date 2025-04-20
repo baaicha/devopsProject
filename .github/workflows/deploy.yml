@@ -1,4 +1,4 @@
-name: CI/CD - Book App Build, Push and Deploy
+name: CI/CD - Book App Build and Push
 
 on:
   push:
@@ -21,14 +21,9 @@ jobs:
       - name: Push image to Docker Hub
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/book-app:latest
 
-      - name: Create .kube directory
-        run: mkdir -p ~/.kube
-
-      - name: Setup Kubeconfig
+      - name: Set up Kubeconfig for Kubernetes deployment
         run: |
           echo "${{ secrets.KUBECONFIG_DATA }}" | base64 --decode > ~/.kube/config
-          # Replace Windows-style paths with Linux-style paths
-          sed -i 's|C:\\Users\\hp\\.minikube|/home/runner/.minikube|g' ~/.kube/config
 
       - name: Deploy to Kubernetes
         run: |
