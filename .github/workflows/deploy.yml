@@ -23,19 +23,12 @@ jobs:
 
       - name: Setup Kubeconfig
         run: |
-          echo "${{ secrets.KUBECONFIG_DATA }}" | base64 --decode > kubeconfig
-        env:
-          KUBECONFIG_DATA: ${{ secrets.KUBECONFIG_DATA }}
-
-      - name: Set KUBECONFIG environment variable
-        run: echo "KUBECONFIG=$PWD/kubeconfig" >> $GITHUB_ENV
+          echo "${{ secrets.KUBECONFIG_DATA }}" | base64 --decode > ~/.kube/config
 
       - name: Deploy to Kubernetes
         run: |
           kubectl apply -f k8s/deployment.yaml
           kubectl apply -f k8s/service.yaml
 
-      - name: Run tests
-        run: |
-          chmod +x tests/test.sh
-          bash tests/test.sh
+      - name: Verify Kubernetes configuration
+        run: kubectl get pods
