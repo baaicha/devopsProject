@@ -21,8 +21,6 @@ jobs:
       - name: Push image to Docker Hub
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/book-app:latest
 
-      - name: Set up Kubeconfig for Kubernetes deployment
-        run: |
-          echo "${{ secrets.KUBECONFIG_DATA }}" | base64 --decode > ~/.kube/config
+      
 
       
